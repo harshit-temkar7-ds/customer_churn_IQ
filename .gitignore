@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -205,3 +206,16 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+=======
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv
+venv/
+*.egg-info/
+dist/
+build/
+.DS_Store
+*.log
+>>>>>>> 8c905f8 (Initial commit - Customer Churn Prediction Project)

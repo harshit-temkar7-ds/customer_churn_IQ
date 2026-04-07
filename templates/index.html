@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ChurnIQ — Customer Intelligence Platform</title>
+<!-- fonts loaded inline so they work offline too -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+/* fallback stack if Google Fonts unreachable */
+</style>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ── NOISE OVERLAY ── -->
+<div class="noise"></div>
+
+<!-- ── AMBIENT BLOBS ── -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header>
+  <div class="logo">
+    <span class="logo-mark">⬡</span>
+    <span class="logo-text">Churn<span class="accent">IQ</span></span>
+  </div>
+  <nav class="nav-pills">
+    <span class="pill active">Predictor</span>
+    <span class="pill" onclick="scrollToSection('insights')">Insights</span>
+    <span class="pill" onclick="scrollToSection('report')">Report</span>
+  </nav>
+  <div class="header-badge">
+    <span class="pulse-dot"></span> Model Live
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-kicker">AI-POWERED RETENTION INTELLIGENCE</div>
+  <h1 class="hero-title">Predict. Retain.<br><em>Grow.</em></h1>
+  <p class="hero-sub">Enterprise-grade churn forecasting that turns at-risk customers into your most loyal advocates.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     MAIN LAYOUT
+══════════════════════════════════════════════ -->
+<main class="layout">
+
+  <!-- LEFT: INPUT PANEL -->
+  <aside class="panel panel-input">
+    <div class="panel-label">CUSTOMER PROFILE</div>
+
+    <div class="field-group">
+      <label>Contract Type</label>
+      <div class="seg-control" id="contract-seg">
+        <button class="seg active" data-val="Month-to-month">Monthly</button>
+        <button class="seg" data-val="One year">1 Year</button>
+        <button class="seg" data-val="Two year">2 Year</button>
+      </div>
+      <input type="hidden" id="contract" value="Month-to-month">
+    </div>
+
+    <div class="field-group">
+      <label>Tenure <span class="val-badge" id="tenure-val">12 mo</span></label>
+      <input type="range" id="tenure" min="0" max="72" value="12" class="slider">
+    </div>
+
+    <div class="field-group">
+      <label>Monthly Charges <span class="val-badge" id="charges-val">$70</span></label>
+      <input type="range" id="monthly-charges" min="18" max="120" value="70" class="slider">
+    </div>
+
+    <div class="field-row">
+      <div class="field-group half">
+        <label>Online Security</label>
+        <div class="toggle-group" id="security-toggle">
+          <button class="tog active" data-val="No">Off</button>
+          <button class="tog" data-val="Yes">On</button>
+        </div>
+        <input type="hidden" id="online-security" value="No">
+      </div>
+      <div class="field-group half">
+        <label>Tech Support</label>
+        <div class="toggle-group" id="support-toggle">
+          <button class="tog active" data-val="No">Off</button>
+          <button class="tog" data-val="Yes">On</button>
+        </div>
+        <input type="hidden" id="tech-support" value="No">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Payment Method</label>
+      <select id="payment-method" class="select-field">
+        <option>Electronic check</option>
+        <option>Mailed check</option>
+        <option>Bank transfer (automatic)</option>
+        <option>Credit card (automatic)</option>
+      </select>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group half">
+        <label>Internet</label>
+        <select id="internet-service" class="select-field">
+          <option>DSL</option>
+          <option>Fiber optic</option>
+          <option>No</option>
+        </select>
+      </div>
+      <div class="field-group half">
+        <label>Senior Citizen</label>
+        <div class="toggle-group" id="senior-toggle">
+          <button class="tog active" data-val="0">No</button>
+          <button class="tog" data-val="1">Yes</button>
+        </div>
+        <input type="hidden" id="senior" value="0">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group half">
+        <label>Streaming TV</label>
+        <div class="toggle-group" id="tv-toggle">
+          <button class="tog active" data-val="No">Off</button>
+          <button class="tog" data-val="Yes">On</button>
+        </div>
+        <input type="hidden" id="streaming-tv" value="No">
+      </div>
+      <div class="field-group half">
+        <label>Streaming Movies</label>
+        <div class="toggle-group" id="movies-toggle">
+          <button class="tog active" data-val="No">Off</button>
+          <button class="tog" data-val="Yes">On</button>
+        </div>
+        <input type="hidden" id="streaming-movies" value="No">
+      </div>
+    </div>
+
+    <button class="predict-btn" id="predict-btn" onclick="runPrediction()">
+      <span class="btn-text">Analyze Customer Risk</span>
+      <span class="btn-icon">→</span>
+    </button>
+  </aside>
+
+  <!-- RIGHT: RESULTS PANEL -->
+  <section class="panel panel-results" id="results-panel">
+
+    <!-- PLACEHOLDER STATE -->
+    <div class="placeholder" id="placeholder">
+      <div class="placeholder-icon">◎</div>
+      <p>Configure the customer profile and run the analysis to reveal churn risk and retention strategy.</p>
+    </div>
+
+    <!-- RESULTS (hidden initially) -->
+    <div id="results-content" class="hidden">
+
+      <!-- RISK GAUGE -->
+      <div class="gauge-container">
+        <div class="risk-badge" id="risk-badge">HIGH RISK</div>
+        <canvas id="gauge-canvas" width="320" height="180"></canvas>
+        <div class="gauge-prob" id="gauge-prob">0%</div>
+        <div class="gauge-label">Churn Probability</div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stat-row" id="insights">
+        <div class="stat-card">
+          <div class="stat-icon">📉</div>
+          <div class="stat-val" id="stat-annual">$0</div>
+          <div class="stat-desc">Annual Revenue at Risk</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💎</div>
+          <div class="stat-val" id="stat-clv">$0</div>
+          <div class="stat-desc">Customer Lifetime Value</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-val" id="stat-actions">0</div>
+          <div class="stat-desc">Retention Actions</div>
+        </div>
+      </div>
+
+      <!-- RECOMMENDATIONS -->
+      <div class="recs-section">
+        <div class="section-label">STRATEGIC RETENTION PLAN</div>
+        <div id="recs-list"></div>
+      </div>
+
+      <!-- REPORT DOWNLOAD -->
+      <div class="report-section" id="report">
+        <div class="section-label">EXECUTIVE REPORT</div>
+        <div class="report-card">
+          <div class="report-info">
+            <span class="report-icon">📄</span>
+            <div>
+              <div class="report-title">Retention Strategy Report</div>
+              <div class="report-sub">PDF-ready executive summary with action plan</div>
+            </div>
+          </div>
+          <button class="download-btn" id="download-btn" onclick="downloadReport()">Download Report</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>ChurnIQ v2.0 — Powered by FastAPI + Gradient Boosting ML</span>
+  <span class="footer-dot">·</span>
+  <span id="api-status">API: Connecting…</span>
+</footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
